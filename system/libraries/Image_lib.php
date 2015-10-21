@@ -373,7 +373,7 @@ class CI_Image_lib {
 	protected $wm_use_drop_shadow	= FALSE;
 
 	/**
-	 * Whether to use truetype fonts
+	 * Whether to use truetype font
 	 *
 	 * @var bool
 	 */

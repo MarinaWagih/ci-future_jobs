@@ -16,7 +16,37 @@ class CountryController extends CI_Controller {
         $this->load->helper('url');
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
-        $this->layout='admin_layout';
+        $this->layout='layout';
+        if ( ! $this->session->userdata('logged_in'))
+        {
+            // Allow some methods?
+            $allowed = array('');
+            if ( ! in_array($this->router->fetch_method(), $allowed))
+            {
+                redirect('login');
+            }
+        }
+        else{
+            if ($this->session->userdata('logged_in')['type']=='admin')
+            {
+                $this->layout='admin_layout';
+                // Allow some methods?
+                $allowed = array('index','add','store','edit','update',
+                    'delete','show','is_countryName_Valid',
+                    'is_countryName_ar_Valid');
+                if (!in_array($this->router->fetch_method(), $allowed))
+                {
+                    redirect('/');
+                }
+            }
+            else{
+                $allowed = array('');
+                if ( ! in_array($this->router->fetch_method(), $allowed))
+                {
+                    redirect('/');
+                }
+            }
+        }
     }
 
     /**

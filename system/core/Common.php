@@ -629,7 +629,7 @@ if ( ! function_exists('_error_handler'))
 
 		// If the error is fatal, the execution of the script should be stopped because
 		// errors can't be recovered from. Halting the script conforms with PHP's
-		// default error handling. See http://www.php.net/manual/en/errorfunc.constants.php
+		// default error handling. See http://www.php.net/manual/ar1/errorfunc.constants.php
 		if ($is_error)
 		{
 			exit(1); // EXIT_ERROR

@@ -29,6 +29,9 @@
                     <a href="<?php echo site_url('country/delete')?>?id=<?php echo $data['countries'][$i]->id; ?>">
                        Delete
                     </a>
+                    <a href="<?php echo site_url('country/show')?>?id=<?php echo $data['countries'][$i]->id; ?>">
+                        Show
+                    </a>
                 </td>
             </tr>
         <?php } ?>

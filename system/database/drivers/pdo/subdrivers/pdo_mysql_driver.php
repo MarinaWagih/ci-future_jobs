@@ -125,7 +125,7 @@ class CI_DB_pdo_mysql_driver extends CI_DB_pdo_driver {
 		/* Prior to PHP 5.3.6, even if the charset was supplied in the DSN
 		 * on connect - it was ignored. This is a work-around for the issue.
 		 *
-		 * Reference: http://www.php.net/manual/en/ref.pdo-mysql.connection.php
+		 * Reference: http://www.php.net/manual/ar1/ref.pdo-mysql.connection.php
 		 */
 		if ( ! is_php('5.3.6') && ! empty($this->char_set))
 		{

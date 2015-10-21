@@ -12,6 +12,7 @@
             <th>user Name</th>
             <th>e-mail</th>
             <th>type</th>
+            <th>specialty</th>
             <th>Operations</th>
 
         </tr>
@@ -24,12 +25,17 @@
                 <td><?php echo $data['users'][$i]->name; ?></td>
                 <td><?php echo $data['users'][$i]->email; ?></td>
                 <td><?php echo $data['users'][$i]->type; ?></td>
+                <td><?php echo $data['users'][$i]->type=='admin'?'Website Admin':
+                               $data['users'][$i]->specialty; ?></td>
                 <td>
                     <a href="<?php echo base_url('user/edit')?>?id=<?php echo $data['users'][$i]->id; ?>">
                         Edit
                     </a>
                     <a href="<?php echo site_url('user/delete')?>user/delete?id=<?php echo $data['users'][$i]->id; ?>">
                        Delete
+                    </a>
+                    <a href="<?php echo site_url('user/show')?>?id=<?php echo $data['users'][$i]->id; ?>">
+                        Show
                     </a>
                 </td>
             </tr>

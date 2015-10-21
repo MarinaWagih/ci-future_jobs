@@ -11,7 +11,7 @@
         <option value="company" <?php echo $data['type']=='country'?'selected':''?>>
             <?php echo $this->lang->line('country')?>
         </option>
-        <?php if(!isset($_SESSION['type'])&&$_SESSION['type']=='admin')
+        <?php if(isset($this->session->userdata('logged_in')['type'])&&$this->session->userdata('logged_in')['type']=='admin')
         {
         ?>
 
@@ -199,4 +199,6 @@ if(!isset($is_edit))
     <label ><?php echo $this->lang->line('image')?></label>
     <input type="file" name="image" >
 </div>
-<button type="submit" class="btn btn-default" id="submit">Submit</button>
+<button type="submit" class="btn btn-info" id="submit">
+    <?php echo isset($is_edit)?$this->lang->line('edit'):$this->lang->line('add')?>
+</button>

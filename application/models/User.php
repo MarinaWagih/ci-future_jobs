@@ -73,7 +73,7 @@ Class User extends CI_Model
      */
     public function get_user_list($limit, $start)
     {
-        $sql = 'select id, name, email, type
+        $sql = 'select id, name, email, type , specialty
                 from user limit ' . $start . ', ' . $limit;
         $query = $this->db->query($sql);
         return $query->result();
@@ -86,6 +86,7 @@ Class User extends CI_Model
         $query=$this->db->get('user');
         return $query->result_array();
     }
+
     public function get_user_by_id($id)
     {
         $this->db->where('id',$id);
@@ -100,6 +101,23 @@ Class User extends CI_Model
         $this->db->select(array('id', 'name', 'email', 'type'));
         $query=$this->db->get('user');
         return $query->result_array();
+    }
+
+    public function login($name,$password)
+    {
+        $this->db->where('email',$name);
+        $this->db->where('password',MD5($password));
+        $this -> db -> limit(1);
+        $query = $this -> db -> get('user');
+
+        if($query -> num_rows() == 1)
+        {
+            return $query->result();
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }

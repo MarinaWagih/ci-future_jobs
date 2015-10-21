@@ -13,12 +13,52 @@ class UserController extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('User','user');
+        $this->load->model('Job','job');
         $this->load->model('Country','country');
         $this->load->helper('url');
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
-        $this->layout='admin_layout';
+
+        $this->layout='layout';
+
+        if ( ! $this->session->userdata('logged_in'))
+        {
+            // Allow some methods?
+            $allowed = array('add','store','is_userName_Valid',
+                             'is_email_Valid');
+            if ( ! in_array($this->router->fetch_method(), $allowed))
+            {
+                redirect('login');
+            }
+        }
+        else{
+            if ($this->session->userdata('logged_in')['type']=='admin')
+            {
+                $this->layout='admin_layout';
+                // Allow some methods?
+                $allowed = array('index','add','store','edit','update',
+                    'delete','show','is_userName_Valid',
+                    'is_email_Valid');
+                if (!in_array($this->router->fetch_method(), $allowed))
+                {
+                    redirect('/');
+                }
+            }
+            else{
+                $allowed = array('edit','update','show');
+                if ( ! in_array($this->router->fetch_method(), $allowed))
+                {
+                    redirect('/');
+                }
+            }
+        }
+
+        $this->load->model('Advertisement','advertisement');
+        $this->countries=$this->country->get_all_countries();
+        $this->left_adv=$this->advertisement->get_left();
+        $this->right_adv=$this->advertisement->get_right();
     }
+
 
     /**
      *go to /q8soccer/application/config/route.php
@@ -95,6 +135,7 @@ class UserController extends CI_Controller {
         $data['fax']='';
         $data['type']='employer';
         $data['countries']=$this->country->get_all_countries();
+
         $data['script']='user-validation.js';
         $view = array('content' => 'user/add', 'data' => $data);
         $this->load->view($this->layout, $view);
@@ -156,8 +197,22 @@ class UserController extends CI_Controller {
             /////////// Save in DB //////////
 //        $this->load->model('user');
             $this->user->add($data);
+        if(isset($this->session->userdata('logged_in')['type'])
+            &&$this->session->userdata('logged_in')['type']=='admin')
+        {
+            redirect('/user/');
+        }
+        else
+        {
 
-           redirect('/user/');
+            $session_array = array(
+                    'id' => $data['id'],
+                    'email' => $data['email'],
+                    'type' => $data['type']);
+            $this->session->set_userdata('logged_in', $session_array);;
+            redirect('/');
+        }
+
         }
 
     }
@@ -171,12 +226,20 @@ class UserController extends CI_Controller {
     public function edit()
     {
         $id=$_GET['id'];
+        $user_id=$this->session->userdata('logged_in')['id'];
+        $user_type=$this->session->userdata('logged_in')['type'];
+        if((isset($user_id)&&$id==$user_id)|(isset($user_id)&&$user_type=='admin'))
+        {
+            $data=$this->user->get_user($id);
+            $data[0]['password']='';
+            $data[0]['countries']=$this->country->get_all_countries();
+            $view = array('content' => 'user/edit', 'data' => $data[0]);
+            $this->load->view($this->layout, $view);
+        }
+        else{
+            redirect('/');
+        }
 
-        $data=$this->user->get_user($id);
-        $data[0]['password']='';
-        $data[0]['countries']=$this->country->get_all_countries();
-        $view = array('content' => 'user/edit', 'data' => $data[0]);
-        $this->load->view($this->layout, $view);
     }
 
     /**
@@ -191,52 +254,56 @@ class UserController extends CI_Controller {
         $this->form_validation->set_rules('name', 'Name', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
         $id=$_POST['id'];
-        if ($this->form_validation->run() == FALSE)
+        $user_id=$this->session->userdata('logged_in')['id'];
+        $user_type=$this->session->userdata('logged_in')['type'];
+        if((isset($user_id)&&$id==$user_id)|(isset($user_id)
+                &&$user_type=='admin'))
         {
-            $data=$this->user->get_user($id);
-            $data[0]['password']='';
-            $data[0]['countries']=$this->country->get_all_countries();
-            $view = array('content' => 'user/edit', 'data' => $data[0]);
-            $this->load->view($this->layout, $view);
-        }
-        else
-        {
-            $data=$this->user->get_user($id)[0];
-            $data['name']=isset($_POST['name'])?$_POST['name']:'';
-            $data['email']=isset($_POST['email'])?$_POST['email']:'';
-            $data['password']=isset($_POST['password'])?$_POST['password']:'';
-            $data['mobile']=isset($_POST['mobile'])?$_POST['mobile']:'';
-            $data['phone']=isset($_POST['phone'])?$_POST['phone']:'';
-            $data['specialty']=isset($_POST['specialty'])?$_POST['specialty']:'';
-            $data['years_of_experience']=isset($_POST['years_of_experience'])?$_POST['years_of_experience']:'';
-            $data['social_status']=isset($_POST['social_status'])?$_POST['social_status']:'';
-            $data['nationality']=isset($_POST['nationality'])?$_POST['nationality']:'';
-            $data['place_of_residence']=isset($_POST['place_of_residence'])?$_POST['place_of_residence']:'';
-            $data['sex']=isset($_POST['sex'])?$_POST['sex']:'male';
-            $data['fax']=isset($_POST['fax'])?$_POST['fax']:'';
-            $data['type']=isset($_POST['type'])?$_POST['type']:'employer';
-            ////////// Upload img////////////
-            if(!empty($_FILES['image']['name']))
-            {
-                unlink('images/profile/'.$data[0]['image']);
-                $this->load->library('Upload_Img', 'upload_img');
-                $data['image'] = $this->upload_img->upload($data['id'], $_FILES, 'images/profile','image');
-
+            if ($this->form_validation->run() == FALSE) {
+                $data = $this->user->get_user($id);
+                $data[0]['password'] = '';
+                $data[0]['countries'] = $this->country->get_all_countries();
+                $view = array('content' => 'user/edit', 'data' => $data[0]);
+                $this->load->view($this->layout, $view);
             }
-            if(!empty($_FILES['cv']['name']))
-            {
-                unlink('files/cv/'.$data['cv']);
-                $this->load->library('Upload_Img', 'upload_img');
-                $data['cv'] = $this->upload_img->upload($data['id'], $_FILES, 'files/cv','cv');
+            else {
+                $data = $this->user->get_user($id)[0];
+                $data['name'] = isset($_POST['name']) ? $_POST['name'] : '';
+                $data['email'] = isset($_POST['email']) ? $_POST['email'] : '';
+                $data['password'] = isset($_POST['password']) ? $_POST['password'] : '';
+                $data['mobile'] = isset($_POST['mobile']) ? $_POST['mobile'] : '';
+                $data['phone'] = isset($_POST['phone']) ? $_POST['phone'] : '';
+                $data['specialty'] = isset($_POST['specialty']) ? $_POST['specialty'] : '';
+                $data['years_of_experience'] = isset($_POST['years_of_experience']) ? $_POST['years_of_experience'] : '';
+                $data['social_status'] = isset($_POST['social_status']) ? $_POST['social_status'] : '';
+                $data['nationality'] = isset($_POST['nationality']) ? $_POST['nationality'] : '';
+                $data['place_of_residence'] = isset($_POST['place_of_residence']) ? $_POST['place_of_residence'] : '';
+                $data['sex'] = isset($_POST['sex']) ? $_POST['sex'] : 'male';
+                $data['fax'] = isset($_POST['fax']) ? $_POST['fax'] : '';
+                $data['type'] = isset($_POST['type']) ? $_POST['type'] : 'employer';
+                ////////// Upload img////////////
+                if (!empty($_FILES['image']['name'])) {
+                    unlink('images/profile/' . $data[0]['image']);
+                    $this->load->library('Upload_Img', 'upload_img');
+                    $data['image'] = $this->upload_img->upload($data['id'], $_FILES, 'images/profile', 'image');
 
-            }
-            /////////// Save in DB //////////
+                }
+                if (!empty($_FILES['cv']['name'])) {
+                    unlink('files/cv/' . $data['cv']);
+                    $this->load->library('Upload_Img', 'upload_img');
+                    $data['cv'] = $this->upload_img->upload($data['id'], $_FILES, 'files/cv', 'cv');
+
+                }
+                /////////// Save in DB //////////
 //        $this->load->model('user');
-            $this->user->update($data);
-            redirect('user', 'refresh');
-            $this->index();
+                $this->user->update($data);
+                redirect('user', 'refresh');
+                $this->index();
+            }
         }
-
+        else{
+            redirect('/');
+        }
 
     }
 
@@ -248,9 +315,13 @@ class UserController extends CI_Controller {
     public function delete()
     {
         $id= $_GET['id'];
+        $user_type=$this->session->userdata('logged_in')['type'];
         $data=$this->user->get_user($id);
-        if(!empty($data[0])) {
-            if (file_exists(base_url() . '/images/profile/' . $data[0]['image']) && $data[0]['image'] !== 'default.png') {
+        if(!empty($data[0])&&$user_type=='admin')
+        {
+            if (file_exists(base_url() . '/images/profile/' . $data[0]['image'])
+                && $data[0]['image'] !== 'default.png')
+            {
                 unlink('images/profile/' . $data[0]['image']);
                 unlink('files/cv/' . $data[0]['cv']);
             }
@@ -258,7 +329,6 @@ class UserController extends CI_Controller {
         }
        redirect('user');
     }
-
 
     /**
      *profile
@@ -269,7 +339,9 @@ class UserController extends CI_Controller {
     {
         $id= $_GET['id'];
         $data=$this->user->get_user($id);
-
+        $data[0]['jobs']=$this->job->get_applied_jobs($id);
+        $data[0]['nationality_data']=$this->country->get_country_by_id($data[0]["nationality"]);
+        $data[0]['place_of_residence_data']=$this->country->get_country_by_id($data[0]["place_of_residence"]);
         $view = array('content' => 'user/show', 'data' => $data[0]);
         $this->load->view($this->layout,$view);
 

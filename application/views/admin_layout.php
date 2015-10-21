@@ -3,14 +3,17 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Dashboard with Off-canvas Sidebar</title>
+    <title>Dashboard Future Jobs</title>
     <meta name="generator" content="Bootply" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="<?php echo base_url()?>css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo base_url();?>css/bootstrap.min.css" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="<?php echo base_url()?>css/styles.css" rel="stylesheet">
+    <script src="<?php echo base_url()?>js/ckeditor.js"></script>
+    <script src="<?php echo base_url()?>js/sample.js"></script>
+    <link rel="stylesheet" href="<?php echo base_url()?>lib/toolbarconfigurator/lib/codemirror/neo.css">
     <?php
     if (!isset($_SESSION['lang']))
         $_SESSION['lang'] = "en";
@@ -40,19 +43,23 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">
-                <span class="glyphicon glyphicon-globe"></span>
-                Kuwait Soccer
+                <span class="glyphicon glyphicon-wrench"></span>
+               Future Jobs
             </a>
 
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
 
-                <li><a href="<?php echo $_SERVER['SERVER_NAME'].base_url()?>/user">users</a></li>
-                <li><a href="<?php echo $_SERVER['SERVER_NAME'].base_url()?>/team">teams</a></li>
-                <li><a href="<?php echo $_SERVER['SERVER_NAME'].base_url()?>/match">matches</a></li>
-                <li><a href="<?php echo $_SERVER['SERVER_NAME'].base_url()?>/prediction">predictions</a></li>
-                <li><a href="#">Logout</a></li>
+                <li><a href="<?php echo site_url('user')?>">Users</a></li>
+                <li><a href="<?php echo site_url('about/edit')?>">About</a></li>
+                <li><a href="<?php echo site_url('category')?>">Category</a></li>
+                <li><a href="<?php echo site_url('country')?>">Country</a></li>
+                <li><a href="<?php echo site_url('foreign_labor')?>">Foreign labor</a></li>
+                <li><a href="<?php echo site_url('job')?>">Jobs</a></li>
+                <li><a href="<?php echo site_url('change_lang')?>"><?php echo $this->lang->line('lang');?></a></li>
+                <li><a href="<?php echo site_url('logout')?>">Logout</a></li>
+                <li><a href="<?php echo site_url('advertisement')?>">advertisement</a></li>
 
 
             </ul>
@@ -75,27 +82,45 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo $_SERVER['SERVER_NAME'].base_url()?>/user">
+                    <a href="<?php echo site_url('user')?>">
                         <span class="glyphicon glyphicon-user"></span>
                         Users
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo $_SERVER['SERVER_NAME'].base_url()?>/team">
-                        <span class="glyphicon glyphicon-flag"></span>
-                        Teams
+                    <a href="<?php echo site_url('about/edit')?>">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                        About
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo $_SERVER['SERVER_NAME'].base_url()?>/match">
-                        <span class="glyphicon glyphicon-fire"></span>
-                        Matches
+                    <a href="<?php echo site_url('category')?>">
+                        <span class="glyphicon glyphicon-tags"></span>
+                        Category
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo $_SERVER['SERVER_NAME'].'/'.base_url()?>prediction">
-                        <span class="glyphicon glyphicon-flash"></span>
-                        Predictions
+                    <a href="<?php echo site_url('country')?>">
+                        <span class="glyphicon glyphicon-globe"></span>
+                        Country
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo site_url('foreign_labor')?>">
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                        Foreign labors
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo site_url('job')?>">
+                        <span class="glyphicon glyphicon-wrench"></span>
+                        Jobs
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo site_url('advertisement')?>">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Advertisement
                     </a>
                 </li>
 
@@ -123,12 +148,12 @@
 </footer>
 
 <!-- script references -->
-<script src="/<?php echo base_url()?>js/jquery-2.1.3.js"></script>
-<script src="/<?php echo base_url()?>js/bootstrap.min.js"></script>
-<script src="/<?php echo base_url()?>js/scripts.js"></script>
+<script src="<?php echo base_url()?>js/jquery-2.1.3.js"></script>
+<script src="<?php echo base_url()?>js/bootstrap.min.js"></script>
+<script src="<?php echo base_url()?>js/scripts.js"></script>
 <?php if (isset($data['script'])) {
     ?>
-    <script src="/<?php echo base_url()?>js/<?php echo $data['script']?>"></script>
+    <script src="<?php echo base_url()?>js/<?php echo $data['script']?>"></script>
 <?php
 }
 ?>

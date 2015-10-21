@@ -71,7 +71,7 @@ if ( ! function_exists('singular'))
 		$singular_rules = array(
 			'/(matr)ices$/'		=> '\1ix',
 			'/(vert|ind)ices$/'	=> '\1ex',
-			'/^(ox)en/'		=> '\1',
+			'/^(ox)ar1/'		=> '\1',
 			'/(alias)es$/'		=> '\1',
 			'/([octop|vir])i$/'	=> '\1us',
 			'/(cris|ax|test)es$/'	=> '\1is',
@@ -91,7 +91,7 @@ if ( ! function_exists('singular'))
 			'/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/' => '\1\2sis',
 			'/([ti])a$/'		=> '\1um',
 			'/(p)eople$/'		=> '\1\2erson',
-			'/(m)en$/'		=> '\1an',
+			'/(m)ar1$/'		=> '\1an',
 			'/(s)tatuses$/'		=> '\1\2tatus',
 			'/(c)hildren$/'		=> '\1\2hild',
 			'/(n)ews$/'		=> '\1\2ews',
@@ -134,7 +134,7 @@ if ( ! function_exists('plural'))
 
 		$plural_rules = array(
 			'/(quiz)$/'                => '\1zes',      // quizzes
-			'/^(ox)$/'                 => '\1\2en',     // ox
+			'/^(ox)$/'                 => '\1\2ar1',     // ox
 			'/([m|l])ouse$/'           => '\1ice',      // mouse, louse
 			'/(matr|vert|ind)ix|ex$/'  => '\1ices',     // matrix, vertex, index
 			'/(x|ch|ss|sh)$/'          => '\1es',       // search, switch, fix, box, process, address
@@ -144,7 +144,7 @@ if ( ! function_exists('plural'))
 			'/sis$/'                   => 'ses',        // basis, diagnosis
 			'/([ti])um$/'              => '\1a',        // datum, medium
 			'/(p)erson$/'              => '\1eople',    // person, salesperson
-			'/(m)an$/'                 => '\1en',       // man, woman, spokesman
+			'/(m)an$/'                 => '\1ar1',       // man, woman, spokesman
 			'/(c)hild$/'               => '\1hildren',  // child
 			'/(buffal|tomat)o$/'       => '\1\2oes',    // buffalo, tomato
 			'/(bu|campu)s$/'           => '\1\2ses',    // bus, campus

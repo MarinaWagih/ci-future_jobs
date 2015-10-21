@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+//session_start();
 class Welcome extends CI_Controller {
 
 	/**
@@ -18,8 +18,11 @@ class Welcome extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
+
 	public function index()
 	{
+
+        var_dump($this->session->userdata('logged_in'));
 		$this->load->view('welcome_message');
 	}
 }
